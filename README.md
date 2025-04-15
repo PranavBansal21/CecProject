@@ -11,7 +11,7 @@ This project implements a ride-hailing service with three main microservices:
 
 ## Architecture
 
-![Microservices Architecture](https://mermaid.ink/img/pako:eNp1ksFuwjAMhl_F8mnT1LdAQkIbHCZ12mGHXUhMiWhIo8SpEEK8-5JWMKZN8yWxv_-3neRMamdBpLSWLVf4Yo0rgIBGb5gXtvZWe3-FXGH0wdKg0Lrwf1QLu65-TbVnTlJvISOtgI0PpGMrrdzV1q-7sOkGlwR3RL2xFDSZYmw1RvBMVhOLnFBY-bJWcyiw0dxqVe-jDnBvTYdwiYWNOTJUbbDDVV5e6OHuXox5B0MUTVc4eeGNmFIq8g04yw0pN0Nb8DBdV5s39GQtXeOkKfYJ0F26LYeGS6wm-Kc7lCq3PcIy5a4iU4lsLI-_a8Rfpfl29_i0Q2SxbvTGahPQ2qXQfI_E0S_k8rnZLrJPmgb6hY_n3nRY2WRt0RfCKGzLhZVX1I71Ud4pXzRd2N1_AY5DuLU)
+![Architecture Diagram](architecture.png)
 
 ### Technology Stack
 - **Backend**: Node.js with Express
@@ -78,14 +78,14 @@ Processes ride bookings and status updates.
    ```bash
    npm run k8s
    # or
-   kubectl apply -f k8s/
+   kubectl apply -R -f k8s/
    ```
 
 3. To clean up Kubernetes resources:
    ```bash
    npm run k8s-delete
    # or
-   kubectl delete -f k8s/
+   kubectl delete -R -f k8s/
    ```
 
 ## API Endpoints
@@ -145,7 +145,3 @@ The application is deployed to Kubernetes with:
 - Ingress for routing external traffic
 - Health checks for reliable operation
 - Resource limits for proper scaling
-
-## License
-
-[MIT](LICENSE)
