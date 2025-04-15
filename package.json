@@ -1,0 +1,17 @@
+{
+  "name": "cab-service",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "user-service",
+    "driver-service",
+    "booking-service"
+  ],
+  "scripts": {
+    "dev": "docker compose up -d",
+    "build": "docker compose build",
+    "stop": "docker compose down",
+    "k8s": "kubectl apply -f k8s/",
+    "k8s-delete": "kubectl delete -f k8s/"
+  }
+}

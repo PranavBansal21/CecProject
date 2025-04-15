@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cab-service-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /users(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: user-service
+            port:
+              number: 80
+      - path: /drivers(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: driver-service
+            port:
+              number: 80
+      - path: /rides(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: booking-service
+            port:
+              number: 80

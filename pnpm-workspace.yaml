@@ -1,0 +1,4 @@
+packages:
+  - "user-service"
+  - "booking-service"
+  - "driver-service"

@@ -1,0 +1,61 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: cab
+      POSTGRES_USER: cab_user
+      POSTGRES_PASSWORD: cab_pass
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "4001:4001"
+    environment:
+      - PG_URL=postgresql://cab_user:cab_pass@postgres:5432/cab
+    depends_on:
+      - postgres
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  driver-service:
+    build: ./driver-service
+    container_name: driver-service
+    environment:
+      - PG_URL=postgresql://cab_user:cab_pass@postgres:5432/cab
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - "4002:4002"
+    depends_on:
+      - postgres
+      - redis
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  booking-service:
+    build: ./booking-service
+    container_name: booking-service
+    ports:
+      - "4003:4003"
+    environment:
+      - PG_URL=postgresql://cab_user:cab_pass@postgres:5432/cab
+      - RABBIT_URL=amqp://rabbitmq
+    depends_on:
+      - postgres
+      - rabbitmq
+
+volumes:
+  pg-data:
