@@ -15,7 +15,7 @@ const redis = createClient({ url: process.env.REDIS_URL });
 redis.connect().then(() => console.log("Redis connected"));
 
 // Health check endpoint for Kubernetes probes
-app.get("/drivers/health", async (req, res) => {
+app.get("/health", async (req, res) => {
   try {
     // Check if database is connected
     await pg.query('SELECT 1');
@@ -33,7 +33,7 @@ app.get("/drivers/health", async (req, res) => {
 });
 
 // 1. Create driver
-app.post("/drivers", async (req, res) => {
+app.post("/", async (req, res) => {
   console.log("Creating driver", req.body);
   const { name, vehicle } = req.body;
   const { rows } = await pg.query(
@@ -44,7 +44,7 @@ app.post("/drivers", async (req, res) => {
 });
 
 // 2. Set availability
-app.post("/drivers/:id/availability", async (req, res) => {
+app.post("/:id/availability", async (req, res) => {
   const driverId = req.params.id;
   const { available } = req.body;
 
@@ -60,7 +60,7 @@ app.post("/drivers/:id/availability", async (req, res) => {
 });
 
 // 3. List available drivers
-app.get("/drivers/available", async (req, res) => {
+app.get("/available", async (req, res) => {
   const ids = await redis.sMembers("available_drivers");
   if (!ids.length) return res.json([]);
 
@@ -69,6 +69,10 @@ app.get("/drivers/available", async (req, res) => {
     [ids.map((id) => parseInt(id))]
   );
   res.json(rows);
+});
+
+app.get('/', async (req, res) => {
+  res.json({ message: 'Driver Service is running' });
 });
 
 app.listen(4002, () => console.log("Driver Service on port 4002"));

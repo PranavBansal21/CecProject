@@ -108,4 +108,8 @@ app.get("/rides/:id", async (req, res) => {
   res.json(rows[0]);
 });
 
+app.get("/", async (req, res) => {
+  res.json({ message: 'Booking Service is running' });
+});
+
 app.listen(4003, () => console.log("Booking Service on port 4003"));

@@ -11,7 +11,7 @@ const pool = new Pool({
 });
 
 // Health check endpoint for Kubernetes probes
-app.get('/users/health', async (req, res) => {
+app.get('/health', async (req, res) => {
   try {
     // Check if database is connected
     await pool.query('SELECT 1');
@@ -22,7 +22,7 @@ app.get('/users/health', async (req, res) => {
   }
 });
 
-app.post('/users', async (req, res) => {
+app.post('/', async (req, res) => {
   const { name, email } = req.body;
   const result = await pool.query(
     'INSERT INTO users(name, email) VALUES($1, $2) RETURNING *',
@@ -31,10 +31,14 @@ app.post('/users', async (req, res) => {
   res.json(result.rows[0]);
 });
 
-app.get('/users/:id', async (req, res) => {
+app.get('/:id', async (req, res) => {
   const result = await pool.query('SELECT * FROM users WHERE id = $1', [req.params.id]);
   if (!result.rows.length) return res.status(404).json({ error: 'Not found' });
   res.json(result.rows[0]);
+});
+
+app.get('/', async (req, res) => {
+  res.json({ message: 'User service is running' });
 });
 
 app.listen(4001, () => console.log('User Service running on port 4001'));
