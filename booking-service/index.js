@@ -22,7 +22,7 @@ async function connectRabbit() {
 connectRabbit();
 
 // Health check endpoint for Kubernetes probes
-app.get("/rides/health", async (req, res) => {
+app.get("/health", async (req, res) => {
   try {
     // Check if database is connected
     await pg.query('SELECT 1');
@@ -40,7 +40,7 @@ app.get("/rides/health", async (req, res) => {
 });
 
 // 1. Request a Ride
-app.post("/rides", async (req, res) => {
+app.post("/", async (req, res) => {
   const { userId, pickup, dropoff } = req.body;
   const { rows } = await pg.query(
     "INSERT INTO rides(user_id, pickup, dropoff, status) VALUES($1, $2, $3, $4) RETURNING *",
@@ -50,7 +50,7 @@ app.post("/rides", async (req, res) => {
 });
 
 // 2. Assign Driver
-app.post("/rides/:id/assign", async (req, res) => {
+app.post("/:id/assign", async (req, res) => {
   const rideId = req.params.id;
   const { driverId } = req.body;
 
@@ -76,7 +76,7 @@ app.post("/rides/:id/assign", async (req, res) => {
 });
 
 // 3. Complete Ride
-app.post("/rides/:id/complete", async (req, res) => {
+app.post("/:id/complete", async (req, res) => {
   const rideId = req.params.id;
 
   const { rows } = await pg.query(
@@ -101,7 +101,7 @@ app.post("/rides/:id/complete", async (req, res) => {
 });
 
 // 4. Get Ride Info
-app.get("/rides/:id", async (req, res) => {
+app.get("/:id", async (req, res) => {
   const rideId = req.params.id;
   const { rows } = await pg.query(`SELECT * FROM rides WHERE id=$1`, [rideId]);
   if (rows.length === 0) return res.status(404).json({ error: "Not found" });
