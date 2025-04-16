@@ -67,6 +67,10 @@ else
   fi
 fi
 
+# Deploy secrets first
+echo -e "${PURPLE}🔐 Deploying application secrets...${NC}"
+kubectl apply -f k8s/app-secrets.yaml
+
 # Deploy infrastructure services first
 echo -e "${CYAN}🗄️  Deploying PostgreSQL...${NC}"
 kubectl apply -f k8s/postgres.yaml

@@ -20,7 +20,15 @@ spec:
         - containerPort: 4001
         env:
         - name: PG_URL
-          value: "postgresql://cab_user:cab_pass@postgres:5432/cab"
+          valueFrom:
+            secretKeyRef:
+              name: app-connection-secrets
+              key: PG_URL
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: app-connection-secrets
+              key: REDIS_URL
         resources:
           requests:
             memory: "128Mi"
@@ -30,7 +38,7 @@ spec:
             cpu: "300m"
         readinessProbe:
           httpGet:
-            path: /users/health
+            path: /health
             port: 4001
           initialDelaySeconds: 5
           periodSeconds: 10
@@ -38,7 +46,7 @@ spec:
           failureThreshold: 3
         livenessProbe:
           httpGet:
-            path: /users/health
+            path: /health
             port: 4001
           initialDelaySeconds: 15
           periodSeconds: 20

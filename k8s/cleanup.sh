@@ -39,6 +39,10 @@ kubectl delete -f k8s/redis.yaml --ignore-not-found=true
 echo -e "${CYAN}🗄️  Removing PostgreSQL...${NC}"
 kubectl delete -f k8s/postgres.yaml --ignore-not-found=true
 
+# Remove application secrets
+echo -e "${PURPLE}🔐 Removing application secrets...${NC}"
+kubectl delete -f k8s/app-secrets.yaml --ignore-not-found=true
+
 # Optional: remove all resources with a specific label if you added one
 # echo -e "${YELLOW}🏷️  Removing any remaining resources with app=cab-service label...${NC}"
 # kubectl delete all -l app=cab-service

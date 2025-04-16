@@ -20,9 +20,15 @@ spec:
         - containerPort: 4003
         env:
         - name: PG_URL
-          value: "postgresql://cab_user:cab_pass@postgres:5432/cab"
+          valueFrom:
+            secretKeyRef:
+              name: app-connection-secrets
+              key: PG_URL
         - name: RABBIT_URL
-          value: "amqp://rabbitmq"
+          valueFrom:
+            secretKeyRef:
+              name: app-connection-secrets
+              key: RABBIT_URL
         resources:
           requests:
             memory: "128Mi"
@@ -32,7 +38,7 @@ spec:
             cpu: "300m"
         readinessProbe:
           httpGet:
-            path: /rides/health
+            path: /health
             port: 4003
           initialDelaySeconds: 5
           periodSeconds: 10
@@ -40,7 +46,7 @@ spec:
           failureThreshold: 3
         livenessProbe:
           httpGet:
-            path: /rides/health
+            path: /health
             port: 4003
           initialDelaySeconds: 15
           periodSeconds: 20
