@@ -3,8 +3,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
 
+const loggingMiddleware = require('./loggingMiddleware');
+
 const app = express();
 app.use(bodyParser.json());
+
+app.use(loggingMiddleware);
 
 const pool = new Pool({
   connectionString: process.env.PG_URL,
